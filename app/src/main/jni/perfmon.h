@@ -13,6 +13,8 @@
 
 int read_file_int(const char *from, int *to);
 
+int read_gpu_file_int(const char *path, int *result);
+
 int read_file_str(const char *from, char *to);
 
 int get_cpu_time(int cpu, int *full_time, int *idle_time);

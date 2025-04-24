@@ -4,7 +4,7 @@ public class RefreshingDateThread extends Thread {
     static int cpunum;
     static int[] cpufreq;
     static int[] cpuload;
-    static int[] cpuonline;
+//    static int[] cpuonline;
     static int adrenoload;
     static int adrenofreq;
     static int mincpubw;
@@ -25,11 +25,11 @@ public class RefreshingDateThread extends Thread {
         reverseCurrentNow = SharedPreferencesUtil.sharedPreferences.getBoolean(SharedPreferencesUtil.REVERSE_CURRENT, SharedPreferencesUtil.REVERSE_CURRENT_DEFAULT);
         cpufreq = new int[cpunum];
         cpuload = new int[cpunum];
-        cpuonline = new int[cpunum];
+//        cpuonline = new int[cpunum];
         while (!FloatingWindow.doExit) {
             for (int i = 0; i < cpunum; i++) {
-                cpuonline[i] = JniTools.getCpuOnlineStatus(i);
-                if (cpuonline[i] == 1 && FloatingWindow.showCpufreqNow)
+//                cpuonline[i] = JniTools.getCpuOnlineStatus(i);
+                if (FloatingWindow.showCpufreqNow)
                     cpufreq[i] = JniTools.getCpuFreq(i);
             }
             if (FloatingWindow.showGpufreqNow && Support.support_adrenofreq)
@@ -58,7 +58,7 @@ public class RefreshingDateThread extends Thread {
                 current = -current;
             FloatingWindow.uiRefresher.sendEmptyMessage(0);
             for (int i = 0; i < cpunum; i++) {
-                if (cpuonline[i] == 1 && FloatingWindow.showCpuloadNow && Support.support_cpuload) {
+                if (FloatingWindow.showCpuloadNow && Support.support_cpuload) {
                     final int ii = i;
                     new Thread() {
                         public void run() {

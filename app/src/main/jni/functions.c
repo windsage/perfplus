@@ -14,6 +14,38 @@ int read_file_int(const char *path, int *result) {
     return 0;
 }
 
+int read_gpu_file_int(const char *path, int *result) {
+    FILE *file = fopen(path, "r");
+    if (!file) {
+        return UNSUPPORTED; // 文件打开失败
+    }
+
+    char line[256];
+    const char *target_prefix = "[GPU   OPP]";
+    int found = 0;
+
+    // 逐行读取文件
+    while (fgets(line, sizeof(line), file)) {
+        if (strstr(line, target_prefix) && strstr(line, "Freq:")) {
+            // 定位关键字段位置
+            char *freq_start = strstr(line, "Freq:");
+            if (!freq_start) break;
+
+            // 跳过 "Freq:" 和可能的空格
+            freq_start += strlen("Freq:");
+            while (*freq_start == ' ' || *freq_start == ',') freq_start++;
+
+            if (sscanf(freq_start, "%d", result) == 1) {
+                found = 1;
+                break;
+            }
+        }
+    }
+
+    fclose(file);
+    return found ? 0 : UNSUPPORTED;
+}
+
 int read_file_str(const char *path, char *result) {
     FILE *freq_file = fopen(path, "r");
     if (freq_file == NULL)

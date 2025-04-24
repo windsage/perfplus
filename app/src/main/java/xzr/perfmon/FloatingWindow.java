@@ -24,7 +24,7 @@ import static xzr.perfmon.RefreshingDateThread.adrenoload;
 import static xzr.perfmon.RefreshingDateThread.cpubw;
 import static xzr.perfmon.RefreshingDateThread.cpufreq;
 import static xzr.perfmon.RefreshingDateThread.cpuload;
-import static xzr.perfmon.RefreshingDateThread.cpuonline;
+//import static xzr.perfmon.RefreshingDateThread.cpuonline;
 import static xzr.perfmon.RefreshingDateThread.current;
 import static xzr.perfmon.RefreshingDateThread.fps;
 import static xzr.perfmon.RefreshingDateThread.gpubw;
@@ -126,10 +126,12 @@ public class FloatingWindow extends Service {
         if (SharedPreferencesUtil.sharedPreferences.getInt(SharedPreferencesUtil.WINDOW_WIDTH, SharedPreferencesUtil.DEFAULT_WIDTH) != SharedPreferencesUtil.DEFAULT_WIDTH)
             params.width = SharedPreferencesUtil.sharedPreferences.getInt(SharedPreferencesUtil.WINDOW_WIDTH, SharedPreferencesUtil.DEFAULT_WIDTH);
         else if ((Support.support_cpuload && showCpuloadNow) || (Support.support_adrenofreq && showGpuloadNow))
-            params.width = (int) ((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 145, getResources().getDisplayMetrics()) * sizeMultipleNow);
+            params.width = (int) ((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 165
+                    , getResources().getDisplayMetrics()) * sizeMultipleNow);
         else
-            params.width = (int) ((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 120, getResources().getDisplayMetrics()) * sizeMultipleNow);
-        params.height = 300;
+            params.width = (int) ((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 140
+                    , getResources().getDisplayMetrics()) * sizeMultipleNow);
+        params.height = 330;
         main = new LinearLayout(this);
         main.setOrientation(LinearLayout.VERTICAL);
         main.setBackgroundColor(getResources().getColor(R.color.floating_window_backgrouns));
@@ -198,13 +200,13 @@ public class FloatingWindow extends Service {
             if (Support.support_cpufreq && showCpufreqNow) {
                 for (i = 0; i < RefreshingDateThread.cpunum; i++) {
                     String text = "cpu" + i + " ";
-                    if (cpuonline[i] == 1) {
+//                    if (cpuonline[i] == 1) {
                         text = text + cpufreq[i] + " Mhz";
                         if (Support.support_cpuload && showCpuloadNow)
                             text = text + Tools.formatIfyAddBlank(cpufreq[i] + "") + cpuload[i] + "%";
-                    } else {
-                        text = text + getResources().getString(R.string.offline);
-                    }
+//                    } else {
+//                        text = text + getResources().getString(R.string.offline);
+//                    }
                     line[i].setText(text);
                 }
             }
