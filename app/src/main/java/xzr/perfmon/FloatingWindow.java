@@ -19,8 +19,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import static xzr.perfmon.RefreshingDateThread.adrenofreq;
-import static xzr.perfmon.RefreshingDateThread.adrenoload;
+import static xzr.perfmon.RefreshingDateThread.gpufreq;
+import static xzr.perfmon.RefreshingDateThread.gpuload;
 import static xzr.perfmon.RefreshingDateThread.cpubw;
 import static xzr.perfmon.RefreshingDateThread.cpufreq;
 import static xzr.perfmon.RefreshingDateThread.cpuload;
@@ -70,7 +70,7 @@ public class FloatingWindow extends Service {
             showCpuloadNow = SharedPreferencesUtil.sharedPreferences.getBoolean(SharedPreferencesUtil.SHOW_CPULOAD, SharedPreferencesUtil.SHOW_CPULOAD_DEFAULT);
 
             showGpufreqNow = SharedPreferencesUtil.sharedPreferences.getBoolean(SharedPreferencesUtil.SHOW_GPUFREQ, SharedPreferencesUtil.SHOW_GPUFREQ_DEFAULT);
-            if (!showGpufreqNow && Support.support_adrenofreq)
+            if (!showGpufreqNow && Support.support_gpufreq)
                 linen--;
             showGpuloadNow = SharedPreferencesUtil.sharedPreferences.getBoolean(SharedPreferencesUtil.SHOW_GPULOAD, SharedPreferencesUtil.SHOW_GPULOAD_DEFAULT);
 
@@ -125,7 +125,7 @@ public class FloatingWindow extends Service {
         params.y = 0;
         if (SharedPreferencesUtil.sharedPreferences.getInt(SharedPreferencesUtil.WINDOW_WIDTH, SharedPreferencesUtil.DEFAULT_WIDTH) != SharedPreferencesUtil.DEFAULT_WIDTH)
             params.width = SharedPreferencesUtil.sharedPreferences.getInt(SharedPreferencesUtil.WINDOW_WIDTH, SharedPreferencesUtil.DEFAULT_WIDTH);
-        else if ((Support.support_cpuload && showCpuloadNow) || (Support.support_adrenofreq && showGpuloadNow))
+        else if ((Support.support_cpuload && showCpuloadNow) || (Support.support_gpufreq && showGpuloadNow))
             params.width = (int) ((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 165
                     , getResources().getDisplayMetrics()) * sizeMultipleNow);
         else
@@ -210,11 +210,11 @@ public class FloatingWindow extends Service {
                     line[i].setText(text);
                 }
             }
-            if (Support.support_adrenofreq && showGpufreqNow) {
+            if (Support.support_gpufreq && showGpufreqNow) {
                 if (showGpuloadNow)
-                    line[i].setText("gpu0 " + adrenofreq + " Mhz" + Tools.formatIfyAddBlank(adrenofreq + "") + adrenoload + "%");
+                    line[i].setText("gpu0 " + gpufreq + " Mhz" + Tools.formatIfyAddBlank(gpufreq + "") + gpuload + "%");
                 else
-                    line[i].setText("gpu0 " + adrenofreq + " Mhz" + Tools.formatIfyAddBlank(adrenofreq + ""));
+                    line[i].setText("gpu0 " + gpufreq + " Mhz" + Tools.formatIfyAddBlank(gpufreq + ""));
                 i++;
             }
             if (Support.support_mincpubw && showMincpubwNow) {

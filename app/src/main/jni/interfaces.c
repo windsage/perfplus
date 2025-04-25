@@ -22,8 +22,7 @@ JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getCpuFreq
 JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getAdrenoFreq
         (JNIEnv *env, jclass jclass1) {
     int freq;
-//    if (read_file_int("/sys/kernel/gpu/gpu_clock", &freq))
-    if (read_gpu_file_int("/proc/gpufreqv2/gpufreq_status", &freq))
+    if (read_file_int("/sys/kernel/gpu/gpu_clock", &freq))
         return UNSUPPORTED;
 
     return freq;
@@ -32,8 +31,37 @@ JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getAdrenoFreq
 JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getAdrenoLoad
         (JNIEnv *env, jclass jclass1) {
     int freq;
-//    if (read_file_int("/sys/kernel/gpu/gpu_busy", &freq))
-    if (read_gpu_file_int("/sys/module/ged/parameters/gpu_loading", &freq))
+    if (read_file_int("/sys/kernel/gpu/gpu_busy", &freq))
+        return UNSUPPORTED;
+
+    return freq;
+}
+
+/**
+ * 获取MTK平台GPU频率
+ * @param env
+ * @param clazz
+ * @return
+ */
+JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getMtkMaliFreq
+        (JNIEnv * env, jclass clazz) {
+    int freq;
+    if (read_gpu_file_int("/proc/gpufreqv2/gpufreq_status", &freq))
+        return UNSUPPORTED;
+
+    return freq / 1000;
+}
+
+/**
+ * 获取MTK平台GPU load
+ * @param env
+ * @param jclass1
+ * @return
+ */
+JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getMtkMaliLoad
+        (JNIEnv *env, jclass jclass1) {
+    int freq;
+    if (read_file_int("/sys/module/ged/parameters/gpu_loading", &freq))
         return UNSUPPORTED;
 
     return freq;

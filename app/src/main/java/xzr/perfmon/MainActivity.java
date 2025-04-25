@@ -26,7 +26,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         mainView = new ScrollView(this);
         setContentView(mainView);
-
         if (!FloatingWindow.doExit) {
             Toast.makeText(MainActivity.this, getResources().getString(R.string.please_close_app_first), Toast.LENGTH_SHORT).show();
             finish();
@@ -64,12 +63,12 @@ public class MainActivity extends Activity {
         }
         {
             TextView textView = new TextView(this);
-            textView.setText(getResources().getString(R.string.support_gpufreq_mo) + Tools.bool2Text(Support.support_adrenofreq, this));
+            textView.setText(getResources().getString(R.string.support_gpufreq_mo) + Tools.bool2Text(Support.support_gpufreq, this));
             main.addView(textView);
         }
         {
             TextView textView = new TextView(this);
-            textView.setText(getResources().getString(R.string.support_gpuload_mo) + Tools.bool2Text(Support.support_adrenofreq, this));
+            textView.setText(getResources().getString(R.string.support_gpuload_mo) + Tools.bool2Text(Support.support_gpufreq, this));
             main.addView(textView);
         }
         {

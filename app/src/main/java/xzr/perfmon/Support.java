@@ -3,7 +3,7 @@ package xzr.perfmon;
 class Support {
     static boolean support_cpufreq;
     static boolean support_cpuload;
-    static boolean support_adrenofreq;
+    static boolean support_gpufreq;
     static boolean support_mincpubw;
     static boolean support_cpubw;
     static boolean support_m4m;
@@ -26,10 +26,10 @@ class Support {
 
         support_cpuload = JniTools.checkCpuLoad();
 
-        if (JniTools.getAdrenoFreq() != UNSUPPORTED) {
+        if (JniTools.getAdrenoFreq() != UNSUPPORTED || JniTools.getMtkMaliFreq() != UNSUPPORTED) {
             linen++;
-            support_adrenofreq = true;
-        } else support_adrenofreq = false;
+            support_gpufreq = true;
+        } else support_gpufreq = false;
 
         if (JniTools.getMinCpuBw() != UNSUPPORTED) {
             linen++;

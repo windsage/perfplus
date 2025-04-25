@@ -11,6 +11,10 @@ public class JniTools {
 
     public static native int getAdrenoLoad();
 
+    public static native int getMtkMaliFreq();
+
+    public static native int getMtkMaliLoad();
+
     public static native int getMinCpuBw();
 
     public static native int getCpuBw();

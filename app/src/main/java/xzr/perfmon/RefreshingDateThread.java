@@ -4,9 +4,9 @@ public class RefreshingDateThread extends Thread {
     static int cpunum;
     static int[] cpufreq;
     static int[] cpuload;
-//    static int[] cpuonline;
-    static int adrenoload;
-    static int adrenofreq;
+    //    static int[] cpuonline;
+    static int gpuload;
+    static int gpufreq;
     static int mincpubw;
     static int cpubw;
     static int m4m;
@@ -19,6 +19,7 @@ public class RefreshingDateThread extends Thread {
 
     static int delay;
     static boolean reverseCurrentNow;
+    PlatformUtil platformUtil = PlatformUtil.getInstance();
 
     public void run() {
         delay = SharedPreferencesUtil.sharedPreferences.getInt(SharedPreferencesUtil.REFRESHING_DELAY, SharedPreferencesUtil.DEFAULT_DELAY);
@@ -32,10 +33,20 @@ public class RefreshingDateThread extends Thread {
                 if (FloatingWindow.showCpufreqNow)
                     cpufreq[i] = JniTools.getCpuFreq(i);
             }
-            if (FloatingWindow.showGpufreqNow && Support.support_adrenofreq)
-                adrenofreq = JniTools.getAdrenoFreq();
-            if (FloatingWindow.showGpuloadNow && Support.support_adrenofreq)
-                adrenoload = JniTools.getAdrenoLoad();
+            if (FloatingWindow.showGpufreqNow && Support.support_gpufreq) {
+                if (platformUtil.isQualcomm()) {
+                    gpufreq = JniTools.getAdrenoFreq();
+                } else if (platformUtil.isMediaTek()) {
+                    gpufreq = JniTools.getMtkMaliFreq();
+                }
+            }
+            if (FloatingWindow.showGpuloadNow && Support.support_gpufreq) {
+                if (platformUtil.isQualcomm()) {
+                    gpuload = JniTools.getAdrenoLoad();
+                } else if (platformUtil.isMediaTek()) {
+                    gpuload = JniTools.getMtkMaliLoad();
+                }
+            }
             if (FloatingWindow.showMincpubwNow && Support.support_mincpubw)
                 mincpubw = JniTools.getMinCpuBw();
             if (FloatingWindow.showCpubwNow && Support.support_cpubw)
