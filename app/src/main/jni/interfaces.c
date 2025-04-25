@@ -44,7 +44,7 @@ JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getAdrenoLoad
  * @return
  */
 JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getMtkMaliFreq
-        (JNIEnv * env, jclass clazz) {
+        (JNIEnv *env, jclass clazz) {
     int freq;
     if (read_gpu_file_int("/proc/gpufreqv2/gpufreq_status", &freq))
         return UNSUPPORTED;
@@ -130,6 +130,15 @@ JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getMaxTemp
         return UNSUPPORTED;
 
     return temp;
+}
+
+JNIEXPORT jfloat JNICALL Java_xzr_perfmon_JniTools_getPcbTemp
+        (JNIEnv *env, jclass jclass1) {
+    int temp;
+    if (get_sensor_temp(&temp, "ap_ntc") || temp == NULLTEMP)
+        return UNSUPPORTED;
+
+    return temp / 1000.0;
 }
 
 JNIEXPORT jboolean JNICALL Java_xzr_perfmon_JniTools_checkCpuLoad

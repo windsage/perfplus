@@ -21,6 +21,8 @@ int get_cpu_time(int cpu, int *full_time, int *idle_time);
 
 int get_max_temp(int *temp);
 
+int get_sensor_temp(int *temp, const char *target_sensor);
+
 int get_mem_info(char name[], int *data);
 
 int read_process_int(const char *cmd, int *result);

@@ -33,6 +33,8 @@ public class JniTools {
 
     public static native int getMaxTemp();
 
+    public static native float getPcbTemp();
+
     public static native int getMemUsage();
 
     public static native int getCurrent();

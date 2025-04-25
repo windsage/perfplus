@@ -4,6 +4,7 @@
 #include "perfmon.h"
 #include <stdio.h>
 #include <string.h>
+#include <dirent.h>
 
 int read_file_int(const char *path, int *result) {
     FILE *freq_file = fopen(path, "r");
@@ -117,6 +118,7 @@ int get_cpu_time(int cpu, int *full_time, int *idle_time) {
 #define DEFAULT_SENSOR_NAME_SIZE 30
 #define TSENS_TZ "tsens_tz_sensor"
 #define CPU_SENSOR "cpu"
+#define PCB_SENSOR "ap_ntc"
 
 int get_max_temp(int *temp) {
     char folders[MAX_SENSOR_NUM][DEFAULT_SENSOR_NAME_SIZE];
@@ -181,6 +183,64 @@ int get_max_temp(int *temp) {
     }
     return 0;
 }
+
+#define MAX_PATH_LEN   256
+#define TEMP_BUFFER_LEN 32
+#define UNSUPPORTED    -1
+#define NOT_FOUND      -2
+#define SUCCESS         0
+
+int get_sensor_temp(int *temp, const char *target_sensor) {
+    DIR *thermal_dir;
+    struct dirent *entry;
+    char type_path[MAX_PATH_LEN], temp_path[MAX_PATH_LEN];
+    FILE *fp;
+    int found = 0;
+
+    *temp = 0;
+
+    if (!(thermal_dir = opendir("/sys/class/thermal"))) {
+        return UNSUPPORTED; // 系统不支持thermal监控
+    }
+
+    while ((entry = readdir(thermal_dir)) != NULL) {
+        if (strncmp(entry->d_name, "thermal_zone", 12) != 0) continue;
+
+        snprintf(type_path, sizeof(type_path),
+                 "/sys/class/thermal/%s/type", entry->d_name);
+
+        if (!(fp = fopen(type_path, "r"))) continue;
+
+        char sensor_type[TEMP_BUFFER_LEN];
+        if (!fgets(sensor_type, sizeof(sensor_type), fp)) {
+            fclose(fp);
+            continue;
+        }
+        fclose(fp);
+
+        sensor_type[strcspn(sensor_type, "\n")] = '\0';
+        if (strcmp(sensor_type, target_sensor) != 0) continue;
+
+        snprintf(temp_path, sizeof(temp_path),
+                 "/sys/class/thermal/%s/temp", entry->d_name);
+        if (!(fp = fopen(temp_path, "r"))) continue;
+
+        char temp_str[TEMP_BUFFER_LEN];
+        if (!fgets(temp_str, sizeof(temp_str), fp)) {
+            fclose(fp);
+            continue;
+        }
+        fclose(fp);
+        
+        *temp = atoi(temp_str);
+        found = 1;
+        break;
+    }
+
+    closedir(thermal_dir);
+    return found ? SUCCESS : NOT_FOUND;
+}
+
 
 int get_mem_info(char name[], int *data) {
     FILE *mem_info;

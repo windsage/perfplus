@@ -33,6 +33,7 @@ import static xzr.perfmon.RefreshingDateThread.m4m;
 import static xzr.perfmon.RefreshingDateThread.maxtemp;
 import static xzr.perfmon.RefreshingDateThread.memusage;
 import static xzr.perfmon.RefreshingDateThread.mincpubw;
+import static xzr.perfmon.RefreshingDateThread.pcbtemp;
 
 public class FloatingWindow extends Service {
     static String TAG = "FloatingWindow";
@@ -238,7 +239,9 @@ public class FloatingWindow extends Service {
                 i++;
             }
             if (Support.support_temp && showThermalNow) {
-                line[i].setText(getResources().getString(R.string.temp) + maxtemp + " ℃");
+                line[i].setText(getResources().getString(R.string.max_temp) + maxtemp + " ℃");
+                i++;
+                line[i].setText(getResources().getString(R.string.pcb_temp) + pcbtemp + " ℃");
                 i++;
             }
             if (Support.support_mem && showMemNow) {

@@ -10,7 +10,8 @@ public class RefreshingDateThread extends Thread {
     static int mincpubw;
     static int cpubw;
     static int m4m;
-    static int maxtemp;
+    static float maxtemp;
+    static float pcbtemp;
     static int memusage;
     static int current;
     static int gpubw;
@@ -53,8 +54,10 @@ public class RefreshingDateThread extends Thread {
                 cpubw = JniTools.getCpuBw();
             if (FloatingWindow.showM4MNow && Support.support_m4m)
                 m4m = JniTools.getM4m();
-            if (FloatingWindow.showThermalNow && Support.support_temp)
+            if (FloatingWindow.showThermalNow && Support.support_temp) {
                 maxtemp = JniTools.getMaxTemp();
+                pcbtemp = JniTools.getPcbTemp();
+            }
             if (FloatingWindow.showMemNow && Support.support_mem)
                 memusage = JniTools.getMemUsage();
             if (FloatingWindow.showCurrentNow && Support.support_current)

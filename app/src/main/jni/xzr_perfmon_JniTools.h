@@ -23,6 +23,11 @@ JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getCpuFreq
 JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getAdrenoFreq
         (JNIEnv *, jclass);
 
+JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getMtkMaliFreq
+        (JNIEnv * env, jclass clazz);
+
+JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getMtkMaliLoad
+        (JNIEnv *env, jclass jclass1);
 /*
  * Class:     xzr_perfmon_JniTools
  * Method:    getadrenoload
@@ -103,6 +108,8 @@ JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getCpuOnlineStatus
 JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getMaxTemp
         (JNIEnv *, jclass);
 
+JNIEXPORT jfloat JNICALL Java_xzr_perfmon_JniTools_getPcbTemp
+        (JNIEnv *env, jclass jclass1);
 /*
  * Class:     xzr_perfmon_JniTools
  * Method:    getmemusage
