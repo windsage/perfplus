@@ -106,7 +106,8 @@ public class PlatformUtil {
         // 检查Unisoc平台关键字
         else if (containsIgnoreCase(hardware, "sprd") ||
                 containsIgnoreCase(platform, "sprd") ||
-                containsIgnoreCase(hardware, "spreadtrum") ||
+                containsIgnoreCase(platform, "ums") ||
+                containsIgnoreCase(hardware, "ums") ||
                 containsIgnoreCase(hardware, "unisoc") ||
                 containsIgnoreCase(soc, "unisoc") ||
                 containsIgnoreCase(soc, "spreadtrum")) {
