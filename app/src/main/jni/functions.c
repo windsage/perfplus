@@ -8,6 +8,17 @@
 #include <stdlib.h>
 #include <ctype.h>
 
+#define SYS_THERMAL_PATH "/sys/class/thermal"
+#define TYPE_FILE "type"
+#define TEMP_FILE "temp"
+#define NULLTEMP -9999
+#define MAX_PATH_LEN   256
+#define TEMP_BUFFER_LEN 32
+#define UNSUPPORTED    -1
+#define NOT_FOUND      -2
+#define SUCCESS         0
+
+
 int read_file_int(const char *path, int *result) {
     FILE *freq_file = fopen(path, "r");
     if (freq_file == NULL)
@@ -20,7 +31,7 @@ int read_file_int(const char *path, int *result) {
 int read_gpu_file_int(const char *path, int *result) {
     FILE *file = fopen(path, "r");
     if (!file) {
-        return UNSUPPORTED; // 文件打开失败
+        return UNSUPPORTED;
     }
 
     char line[256];
@@ -30,7 +41,6 @@ int read_gpu_file_int(const char *path, int *result) {
     // 逐行读取文件
     while (fgets(line, sizeof(line), file)) {
         if (strstr(line, target_prefix) && strstr(line, "Freq:")) {
-            // 定位关键字段位置
             char *freq_start = strstr(line, "Freq:");
             if (!freq_start) break;
 
@@ -116,22 +126,18 @@ int get_cpu_time(int cpu, int *full_time, int *idle_time) {
 
 }
 
-#define SYS_THERMAL_PATH "/sys/class/thermal"
-#define TYPE_FILE "type"
-#define TEMP_FILE "temp"
-#define NULLTEMP -9999
 
-// 字符串小写处理
+
 void to_lowercase(const char *src, char *dst, size_t size) {
-    for (size_t i = 0; i < size - 1 && src[i]; i++) {
-        dst[i] = tolower((unsigned char) src[i]);
+    size_t i = 0;
+    for (; i < size - 1 && src[i]; i++) {
+        dst[i] = tolower((unsigned char)src[i]);
     }
-    dst[size - 1] = '\0';
+    dst[i] = '\0';
 }
 
-// 是否包含子字符串（忽略大小写）
 int strcasestr_in(const char *haystack, const char *needle) {
-    char h_lower[128], n_lower[64];
+    char h_lower[512], n_lower[64];
     to_lowercase(haystack, h_lower, sizeof(h_lower));
     to_lowercase(needle, n_lower, sizeof(n_lower));
     return strstr(h_lower, n_lower) != NULL;
@@ -142,7 +148,7 @@ int get_sensor_max_temp(int *temp, const char *target_sensor) {
     struct dirent *entry = NULL;
     char type_path[256];
     char temp_path[256];
-    char type_buf[64];
+    char type_buf[128];
     int max_temp = NULLTEMP;
 
     dir = opendir(SYS_THERMAL_PATH);
@@ -153,7 +159,6 @@ int get_sensor_max_temp(int *temp, const char *target_sensor) {
         if (strncmp(entry->d_name, "thermal_zone", 12) != 0)
             continue;
 
-        // 构建 type 路径
         snprintf(type_path, sizeof(type_path), "%s/%s/%s",
                  SYS_THERMAL_PATH, entry->d_name, TYPE_FILE);
 
@@ -167,14 +172,13 @@ int get_sensor_max_temp(int *temp, const char *target_sensor) {
         }
         fclose(type_file);
 
-        // 去掉末尾换行
-        type_buf[strcspn(type_buf, "\n")] = 0;
+        type_buf[strcspn(type_buf, "\n")] = '\0';
+        if (strlen(type_buf) == 0)
+            continue;
 
-        // 不区分大小写包含
         if (!strcasestr_in(type_buf, target_sensor))
             continue;
 
-        // 构建 temp 路径
         snprintf(temp_path, sizeof(temp_path), "%s/%s/%s",
                  SYS_THERMAL_PATH, entry->d_name, TEMP_FILE);
 
@@ -184,25 +188,19 @@ int get_sensor_max_temp(int *temp, const char *target_sensor) {
 
         int cur_temp;
         if (fscanf(temp_file, "%d", &cur_temp) == 1) {
-            if (cur_temp > 1000) cur_temp /= 1000; // m°C -> °C
             if (cur_temp > max_temp)
                 max_temp = cur_temp;
         }
-
         fclose(temp_file);
     }
 
     closedir(dir);
+
+    if (max_temp == NULLTEMP)
+        return -1;
     *temp = max_temp;
     return 0;
 }
-
-
-#define MAX_PATH_LEN   256
-#define TEMP_BUFFER_LEN 32
-#define UNSUPPORTED    -1
-#define NOT_FOUND      -2
-#define SUCCESS         0
 
 int get_sensor_temp(int *temp, const char *target_sensor) {
     DIR *thermal_dir;
@@ -253,7 +251,6 @@ int get_sensor_temp(int *temp, const char *target_sensor) {
     closedir(thermal_dir);
     return found ? SUCCESS : NOT_FOUND;
 }
-
 
 int get_mem_info(char name[], int *data) {
     FILE *mem_info;

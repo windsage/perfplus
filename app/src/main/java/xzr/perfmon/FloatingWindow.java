@@ -24,7 +24,7 @@ import static xzr.perfmon.RefreshingDateThread.gpuload;
 import static xzr.perfmon.RefreshingDateThread.cpubw;
 import static xzr.perfmon.RefreshingDateThread.cpufreq;
 import static xzr.perfmon.RefreshingDateThread.cpuload;
-//import static xzr.perfmon.RefreshingDateThread.cpuonline;
+import static xzr.perfmon.RefreshingDateThread.cpuonline;
 import static xzr.perfmon.RefreshingDateThread.current;
 import static xzr.perfmon.RefreshingDateThread.fps;
 import static xzr.perfmon.RefreshingDateThread.gpubw;
@@ -201,13 +201,13 @@ public class FloatingWindow extends Service {
             if (Support.support_cpufreq && showCpufreqNow) {
                 for (i = 0; i < RefreshingDateThread.cpunum; i++) {
                     String text = "cpu" + i + " ";
-//                    if (cpuonline[i] == 1) {
+                    if (cpuonline[i] == 1) {
                         text = text + cpufreq[i] + " Mhz";
                         if (Support.support_cpuload && showCpuloadNow)
                             text = text + Tools.formatIfyAddBlank(cpufreq[i] + "") + cpuload[i] + "%";
-//                    } else {
-//                        text = text + getResources().getString(R.string.offline);
-//                    }
+                    } else {
+                        text = text + getResources().getString(R.string.offline);
+                    }
                     line[i].setText(text);
                 }
             }

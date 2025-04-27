@@ -31,7 +31,7 @@ public class JniTools {
 
     public static native int getCpuOnlineStatus(int cpu);
 
-    public static native int getMaxTemp();
+    public static native float getCpuMaxTemp();
 
     public static native float getPcbTemp();
 

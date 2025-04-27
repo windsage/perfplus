@@ -4,7 +4,7 @@ public class RefreshingDateThread extends Thread {
     static int cpunum;
     static int[] cpufreq;
     static int[] cpuload;
-    //    static int[] cpuonline;
+    static int[] cpuonline;
     static int gpuload;
     static int gpufreq;
     static int mincpubw;
@@ -27,10 +27,10 @@ public class RefreshingDateThread extends Thread {
         reverseCurrentNow = SharedPreferencesUtil.sharedPreferences.getBoolean(SharedPreferencesUtil.REVERSE_CURRENT, SharedPreferencesUtil.REVERSE_CURRENT_DEFAULT);
         cpufreq = new int[cpunum];
         cpuload = new int[cpunum];
-//        cpuonline = new int[cpunum];
+        cpuonline = new int[cpunum];
         while (!FloatingWindow.doExit) {
             for (int i = 0; i < cpunum; i++) {
-//                cpuonline[i] = JniTools.getCpuOnlineStatus(i);
+                cpuonline[i] = JniTools.getCpuOnlineStatus(i);
                 if (FloatingWindow.showCpufreqNow)
                     cpufreq[i] = JniTools.getCpuFreq(i);
             }
@@ -55,7 +55,7 @@ public class RefreshingDateThread extends Thread {
             if (FloatingWindow.showM4MNow && Support.support_m4m)
                 m4m = JniTools.getM4m();
             if (FloatingWindow.showThermalNow && Support.support_temp) {
-                maxtemp = JniTools.getMaxTemp();
+                maxtemp = JniTools.getCpuMaxTemp();
                 pcbtemp = JniTools.getPcbTemp();
             }
             if (FloatingWindow.showMemNow && Support.support_mem)
