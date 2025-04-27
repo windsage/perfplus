@@ -28,6 +28,13 @@ A simple performance monitor for Android.
 1. 增加平台的判断，支持qcom mediatek unisoc
 2. 对gpu 支持qcom和mediatek
 3. gpu load读取出错Fix
+4. 增加了对pcb板温的读取
+
+### 20250427
+1. 修改了application id
+2. 把max temp修改为cpu max temp，去读thermal_zone*/type中包含cpu的节点的temp，找出最大值
+3. 固定apk的名字
+4. 修改README.md
 
 ## 预计修改
 1. 温度目前是CPU温度，需要增加板温。
