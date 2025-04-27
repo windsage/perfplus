@@ -1,5 +1,20 @@
 package xzr.perfmon;
 
+import static xzr.perfmon.RefreshingDateThread.cpubw;
+import static xzr.perfmon.RefreshingDateThread.cpufreq;
+import static xzr.perfmon.RefreshingDateThread.cpuload;
+import static xzr.perfmon.RefreshingDateThread.current;
+import static xzr.perfmon.RefreshingDateThread.fps;
+import static xzr.perfmon.RefreshingDateThread.gpubw;
+import static xzr.perfmon.RefreshingDateThread.gpufreq;
+import static xzr.perfmon.RefreshingDateThread.gpuload;
+import static xzr.perfmon.RefreshingDateThread.llcbw;
+import static xzr.perfmon.RefreshingDateThread.m4m;
+import static xzr.perfmon.RefreshingDateThread.maxtemp;
+import static xzr.perfmon.RefreshingDateThread.memusage;
+import static xzr.perfmon.RefreshingDateThread.mincpubw;
+import static xzr.perfmon.RefreshingDateThread.pcbtemp;
+
 import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Context;
@@ -18,22 +33,6 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import static xzr.perfmon.RefreshingDateThread.gpufreq;
-import static xzr.perfmon.RefreshingDateThread.gpuload;
-import static xzr.perfmon.RefreshingDateThread.cpubw;
-import static xzr.perfmon.RefreshingDateThread.cpufreq;
-import static xzr.perfmon.RefreshingDateThread.cpuload;
-import static xzr.perfmon.RefreshingDateThread.cpuonline;
-import static xzr.perfmon.RefreshingDateThread.current;
-import static xzr.perfmon.RefreshingDateThread.fps;
-import static xzr.perfmon.RefreshingDateThread.gpubw;
-import static xzr.perfmon.RefreshingDateThread.llcbw;
-import static xzr.perfmon.RefreshingDateThread.m4m;
-import static xzr.perfmon.RefreshingDateThread.maxtemp;
-import static xzr.perfmon.RefreshingDateThread.memusage;
-import static xzr.perfmon.RefreshingDateThread.mincpubw;
-import static xzr.perfmon.RefreshingDateThread.pcbtemp;
 
 public class FloatingWindow extends Service {
     static String TAG = "FloatingWindow";
@@ -201,12 +200,9 @@ public class FloatingWindow extends Service {
             if (Support.support_cpufreq && showCpufreqNow) {
                 for (i = 0; i < RefreshingDateThread.cpunum; i++) {
                     String text = "cpu" + i + " ";
-                    if (cpuonline[i] == 1) {
-                        text = text + cpufreq[i] + " Mhz";
-                        if (Support.support_cpuload && showCpuloadNow)
-                            text = text + Tools.formatIfyAddBlank(cpufreq[i] + "") + cpuload[i] + "%";
-                    } else {
-                        text = text + getResources().getString(R.string.offline);
+                    text = text + cpufreq[i] + " Mhz";
+                    if (Support.support_cpuload && showCpuloadNow) {
+                        text = text + Tools.formatIfyAddBlank(cpufreq[i] + "") + cpuload[i] + "%";
                     }
                     line[i].setText(text);
                 }

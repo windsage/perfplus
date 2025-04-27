@@ -4,7 +4,6 @@ public class RefreshingDateThread extends Thread {
     static int cpunum;
     static int[] cpufreq;
     static int[] cpuload;
-    static int[] cpuonline;
     static int gpuload;
     static int gpufreq;
     static int mincpubw;
@@ -27,10 +26,8 @@ public class RefreshingDateThread extends Thread {
         reverseCurrentNow = SharedPreferencesUtil.sharedPreferences.getBoolean(SharedPreferencesUtil.REVERSE_CURRENT, SharedPreferencesUtil.REVERSE_CURRENT_DEFAULT);
         cpufreq = new int[cpunum];
         cpuload = new int[cpunum];
-        cpuonline = new int[cpunum];
         while (!FloatingWindow.doExit) {
             for (int i = 0; i < cpunum; i++) {
-                cpuonline[i] = JniTools.getCpuOnlineStatus(i);
                 if (FloatingWindow.showCpufreqNow)
                     cpufreq[i] = JniTools.getCpuFreq(i);
             }
