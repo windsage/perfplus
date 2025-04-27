@@ -6,7 +6,8 @@ android {
     namespace 'xzr.perfmon'
     compileSdkVersion 33
     defaultConfig {
-        applicationId "xzr.perfmon"
+//        applicationId "xzr.perfmon"
+        applicationId "com.transsion.perftool"
         minSdkVersion 21
         targetSdkVersion 33
         versionCode 16

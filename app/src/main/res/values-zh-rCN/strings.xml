@@ -22,7 +22,7 @@
     <string name="visit_github">"访问Github "</string>
     <string name="visit_coolapk">| 访问酷安（给个五星好评吧）</string>
     <string name="offline">离线</string>
-    <string name="max_temp">"最大温度 "</string>
+    <string name="cpu_max_temp">"CPU温度 "</string>
     <string name="pcb_temp">"PCB温度 "</string>
     <string name="mem">"内存 "</string>
     <string name="current">"电流 "</string>

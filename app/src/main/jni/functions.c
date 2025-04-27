@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <dirent.h>
+#include <stdlib.h>
+#include <ctype.h>
 
 int read_file_int(const char *path, int *result) {
     FILE *freq_file = fopen(path, "r");
@@ -114,75 +116,87 @@ int get_cpu_time(int cpu, int *full_time, int *idle_time) {
 
 }
 
-#define MAX_SENSOR_NUM 150
-#define DEFAULT_SENSOR_NAME_SIZE 30
-#define TSENS_TZ "tsens_tz_sensor"
-#define CPU_SENSOR "cpu"
-#define PCB_SENSOR "ap_ntc"
+#define SYS_THERMAL_PATH "/sys/class/thermal"
+#define TYPE_FILE "type"
+#define TEMP_FILE "temp"
+#define NULLTEMP -9999
 
-int get_max_temp(int *temp) {
-    char folders[MAX_SENSOR_NUM][DEFAULT_SENSOR_NAME_SIZE];
-    char types[MAX_SENSOR_NUM][DEFAULT_SENSOR_NAME_SIZE];
-    int num = 0;
-    int ctemp = NULLTEMP;
-    char cpath[DEFAULT_PATH_SIZE] = "";
-    FILE *process;
-
-    *temp = NULLTEMP;
-    for (int i = 0; i < MAX_SENSOR_NUM; i++) {
-        strcpy(folders[i], "");
-        strcpy(types[i], "");
+// 字符串小写处理
+void to_lowercase(const char *src, char *dst, size_t size) {
+    for (size_t i = 0; i < size - 1 && src[i]; i++) {
+        dst[i] = tolower((unsigned char) src[i]);
     }
+    dst[size - 1] = '\0';
+}
 
-    process = popen("ls /sys/class/thermal | grep thermal_zone", "r");
-    if (process == NULL)
-        return UNSUPPORTED;
-    //Read sensor folders
-    while (fscanf(process, "%s", folders[num]) != EOF)
-        num++;
-    pclose(process);
+// 是否包含子字符串（忽略大小写）
+int strcasestr_in(const char *haystack, const char *needle) {
+    char h_lower[128], n_lower[64];
+    to_lowercase(haystack, h_lower, sizeof(h_lower));
+    to_lowercase(needle, n_lower, sizeof(n_lower));
+    return strstr(h_lower, n_lower) != NULL;
+}
 
-    num = 0;
-    process = popen("cat /sys/class/thermal/thermal_zone*/type", "r");
-    if (process == NULL)
-        return UNSUPPORTED;
-    //Read sensor type
-    while (fscanf(process, "%s", types[num]) != EOF)
-        num++;
-    pclose(process);
+int get_sensor_max_temp(int *temp, const char *target_sensor) {
+    DIR *dir = NULL;
+    struct dirent *entry = NULL;
+    char type_path[256];
+    char temp_path[256];
+    char type_buf[64];
+    int max_temp = NULLTEMP;
 
-    //Looking for the target sensor
-    for (int i = 0; i < MAX_SENSOR_NUM; i++) {
-        if (!strncmp(TSENS_TZ, types[i], strlen(TSENS_TZ))) {
-            //Locked the target
-            sprintf(cpath, "/sys/class/thermal/%s/temp", folders[i]);
-            process = fopen(cpath, "r");
-            if (process == NULL)
-                continue;
-            if (fscanf(process, "%d", &ctemp) == EOF) {
-                fclose(process);
-                continue;
-            }
-            ctemp = ctemp / 10;
-            fclose(process);
-        } else if (!strncmp(CPU_SENSOR, types[i], strlen(CPU_SENSOR))) {
-            //Locked the target
-            sprintf(cpath, "/sys/class/thermal/%s/temp", folders[i]);
-            process = fopen(cpath, "r");
-            if (process == NULL)
-                continue;
-            if (fscanf(process, "%d", &ctemp) == EOF) {
-                fclose(process);
-                continue;
-            }
-            ctemp = ctemp / 1000;
-            fclose(process);
+    dir = opendir(SYS_THERMAL_PATH);
+    if (!dir)
+        return -1;
+
+    while ((entry = readdir(dir)) != NULL) {
+        if (strncmp(entry->d_name, "thermal_zone", 12) != 0)
+            continue;
+
+        // 构建 type 路径
+        snprintf(type_path, sizeof(type_path), "%s/%s/%s",
+                 SYS_THERMAL_PATH, entry->d_name, TYPE_FILE);
+
+        FILE *type_file = fopen(type_path, "r");
+        if (!type_file)
+            continue;
+
+        if (!fgets(type_buf, sizeof(type_buf), type_file)) {
+            fclose(type_file);
+            continue;
         }
-        if (*temp < ctemp)
-            *temp = ctemp;
+        fclose(type_file);
+
+        // 去掉末尾换行
+        type_buf[strcspn(type_buf, "\n")] = 0;
+
+        // 不区分大小写包含
+        if (!strcasestr_in(type_buf, target_sensor))
+            continue;
+
+        // 构建 temp 路径
+        snprintf(temp_path, sizeof(temp_path), "%s/%s/%s",
+                 SYS_THERMAL_PATH, entry->d_name, TEMP_FILE);
+
+        FILE *temp_file = fopen(temp_path, "r");
+        if (!temp_file)
+            continue;
+
+        int cur_temp;
+        if (fscanf(temp_file, "%d", &cur_temp) == 1) {
+            if (cur_temp > 1000) cur_temp /= 1000; // m°C -> °C
+            if (cur_temp > max_temp)
+                max_temp = cur_temp;
+        }
+
+        fclose(temp_file);
     }
+
+    closedir(dir);
+    *temp = max_temp;
     return 0;
 }
+
 
 #define MAX_PATH_LEN   256
 #define TEMP_BUFFER_LEN 32
@@ -199,15 +213,14 @@ int get_sensor_temp(int *temp, const char *target_sensor) {
 
     *temp = 0;
 
-    if (!(thermal_dir = opendir("/sys/class/thermal"))) {
-        return UNSUPPORTED; // 系统不支持thermal监控
+    if (!(thermal_dir = opendir(SYS_THERMAL_PATH))) {
+        return UNSUPPORTED;
     }
 
     while ((entry = readdir(thermal_dir)) != NULL) {
         if (strncmp(entry->d_name, "thermal_zone", 12) != 0) continue;
-
-        snprintf(type_path, sizeof(type_path),
-                 "/sys/class/thermal/%s/type", entry->d_name);
+        snprintf(type_path, sizeof(type_path), "%s/%s/%s",
+                 SYS_THERMAL_PATH, entry->d_name, TYPE_FILE);
 
         if (!(fp = fopen(type_path, "r"))) continue;
 
@@ -221,8 +234,8 @@ int get_sensor_temp(int *temp, const char *target_sensor) {
         sensor_type[strcspn(sensor_type, "\n")] = '\0';
         if (strcmp(sensor_type, target_sensor) != 0) continue;
 
-        snprintf(temp_path, sizeof(temp_path),
-                 "/sys/class/thermal/%s/temp", entry->d_name);
+        snprintf(temp_path, sizeof(temp_path), "%s/%s/%s",
+                 SYS_THERMAL_PATH, entry->d_name, TEMP_FILE);
         if (!(fp = fopen(temp_path, "r"))) continue;
 
         char temp_str[TEMP_BUFFER_LEN];
@@ -231,7 +244,7 @@ int get_sensor_temp(int *temp, const char *target_sensor) {
             continue;
         }
         fclose(fp);
-        
+
         *temp = atoi(temp_str);
         found = 1;
         break;

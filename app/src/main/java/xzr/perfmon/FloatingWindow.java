@@ -239,7 +239,7 @@ public class FloatingWindow extends Service {
                 i++;
             }
             if (Support.support_temp && showThermalNow) {
-                line[i].setText(getResources().getString(R.string.max_temp) + maxtemp + " ℃");
+                line[i].setText(getResources().getString(R.string.cpu_max_temp) + maxtemp + " ℃");
                 i++;
                 line[i].setText(getResources().getString(R.string.pcb_temp) + pcbtemp + " ℃");
                 i++;

@@ -22,7 +22,7 @@
     <string name="visit_github">"Visit Github "</string>
     <string name="visit_coolapk">| Visit Coolapk</string>
     <string name="offline">offline</string>
-    <string name="max_temp">"max temp "</string>
+    <string name="cpu_max_temp">"cpu temp "</string>
     <string name="pcb_temp">"pcb temp "</string>
     <string name="mem">"mem "</string>
     <string name="current">"current "</string>
