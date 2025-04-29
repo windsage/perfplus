@@ -203,16 +203,3 @@ JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getLlccBw
 
     return UNSUPPORTED;
 }
-
-JNIEXPORT jstring JNICALL Java_xzr_perfmon_JniTools_getFps
-        (JNIEnv *env, jclass jclass1) {
-    char fps[5] = "";
-
-    if (!read_file_str("/sys/devices/virtual/graphics/fb0/measured_fps", &fps))
-        return (*env)->NewStringUTF(env, &fps);
-
-    if (!read_process_str("cat /sys/class/drm/sde-crtc-0/measured_fps | awk '{print $2}'", &fps))
-        return (*env)->NewStringUTF(env, &fps);
-
-    return (*env)->NewStringUTF(env, "");
-}

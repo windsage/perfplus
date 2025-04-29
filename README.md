@@ -36,26 +36,12 @@ A simple performance monitor for Android.
 3. 固定apk的名字
 4. 修改README.md
 
+### 20250429
+1. 从`/sys/kernel/fpsgo/fstb/fpsgo_status`读取fps信息的方法不可行
+   1. 需要根据tid去判断top-app，从/proc/$tid/cgroup读取需要root权限，普通应用无法获得
+2. 修改使用Java方法，在Choreographer.FrameCallback回调中计算帧率，同时配置间隔时间采用sp数据
+
 ## 预计修改
-1. 温度目前是CPU温度，需要增加板温。
-2. GPU可以读取，但是需要增加SELinux权限。
-3. FPS相关的节点没有获取到。
-4. 如果后续有节点需要从660->664，可以考虑对CPU online也打开，然后打开原来的online判断
-5. GPU负载读取有问题
 
 ## 权限记录
-```shell
-# 允许访问GPU频率相关目录和文件 
-allow platform_app proc_gpufreqv2:dir { search };
-allow platform_app proc_gpufreqv2_gpufreq_status:file { read open getattr };
- 
-# 允许访问GPU负载监控路径 
-allow platform_app sysfs_ged:dir { search };
-allow platform_app sysfs_ged:file { read open getattr };
- 
-# 允许访问电池信息路径 这个会被neverallow拒绝
-allow platform_app sysfs_batteryinfo:dir { search };
-allow platform_app sysfs_batteryinfo:file { read open getattr };
-chmod 664 /sys/devices/system/cpu/cpu*/online
-chmod 664 /proc/gpufreqv2/gpufreq_status
-```
+权限修改已经合入主干分支，支持vendor s/u/v

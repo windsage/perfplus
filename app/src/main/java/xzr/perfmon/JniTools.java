@@ -40,6 +40,4 @@ public class JniTools {
     public static native int getCurrent();
 
     public static native int getCpuNum();
-
-    public static native String getFps();
 }

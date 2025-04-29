@@ -63,8 +63,9 @@ public class RefreshingDateThread extends Thread {
                 gpubw = JniTools.getGpuBw();
             if (FloatingWindow.showLlcbwNow && Support.support_llcbw)
                 llcbw = JniTools.getLlccBw();
-            if (FloatingWindow.showFpsNow && Support.support_fps)
-                fps = JniTools.getFps();
+            if (FloatingWindow.showFpsNow && Support.support_fps) {
+                fps = FpsMonitor.getInstance().getFpsgoInfo();
+            }
             if (reverseCurrentNow)
                 current = -current;
             FloatingWindow.uiRefresher.sendEmptyMessage(0);

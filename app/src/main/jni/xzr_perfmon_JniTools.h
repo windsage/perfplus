@@ -134,14 +134,6 @@ JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getCurrent
 JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getCpuNum
         (JNIEnv *, jclass);
 
-/*
- * Class:     xzr_perfmon_JniTools
- * Method:    getfps
- * Signature: ()Ljava/lang/String;
- */
-JNIEXPORT jstring JNICALL Java_xzr_perfmon_JniTools_getFps
-        (JNIEnv *, jclass);
-
 #ifdef __cplusplus
 }
 #endif

@@ -35,7 +35,7 @@ public class MainActivity extends Activity {
         //Move from service:onCreate in order to show the supporting list
         RefreshingDateThread.cpunum = JniTools.getCpuNum();
         FloatingWindow.linen = Support.CheckSupport();
-        SharedPreferencesUtil.init(this);
+
 
         if (SharedPreferencesUtil.sharedPreferences.getBoolean(SharedPreferencesUtil.SKIP_FIRST_SCREEN, SharedPreferencesUtil.DEFAULT_SKIP_FIRST_SCREEN)) {
             permissionCheck();

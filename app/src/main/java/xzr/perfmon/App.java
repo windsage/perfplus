@@ -1,13 +1,20 @@
 package xzr.perfmon;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 
 public class App extends Application {
     private static final String TAG = "PerfMon";
+    @SuppressLint("StaticFieldLeak")
+    private static Context context;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        context = getApplicationContext();
+        SharedPreferencesUtil.init(this);
         PlatformUtil.getInstance().initAsync(new PlatformUtil.PlatformInitCallback() {
             @Override
             public void onPlatformDetected(PlatformUtil.PlatformType platformType) {
@@ -29,5 +36,16 @@ public class App extends Application {
                 }
             }
         });
+        FpsMonitor.getInstance().start();
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        FpsMonitor.getInstance().stop();
+    }
+
+    public static Context getContext() {
+        return context;
     }
 }
