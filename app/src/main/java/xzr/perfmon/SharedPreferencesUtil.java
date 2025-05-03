@@ -63,6 +63,9 @@ public class SharedPreferencesUtil {
     static final String SHOW_FPS = "show_fps";
     static final boolean SHOW_FPS_DEFAULT = true;
 
+    public static final String DATA_LOGGING_ENABLED = "data_logging_enabled";
+    public static boolean DATA_LOGGING_DEFAULT = false;
+
     static void init(Context context) {
         sharedPreferences = context.getSharedPreferences("main", 0);
     }

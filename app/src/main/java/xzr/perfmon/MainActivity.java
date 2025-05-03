@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -43,11 +44,17 @@ public class MainActivity extends Activity {
             return;
         }
 
-        addView();
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        addView();
+    }
+
     void addView() {
+        mainView.removeAllViews();
         LinearLayout main = new LinearLayout(this);
         main.setOrientation(LinearLayout.VERTICAL);
         mainView.addView(main);
@@ -109,6 +116,13 @@ public class MainActivity extends Activity {
         {
             TextView textView = new TextView(this);
             textView.setText(getResources().getString(R.string.support_fps_mo) + Tools.bool2Text(Support.support_fps, this));
+            main.addView(textView);
+        }
+        {
+            TextView textView = new TextView(this);
+            textView.setText(getResources().getString(R.string.support_store_data)
+                    + Tools.bool2Text(SharedPreferencesUtil.sharedPreferences.getBoolean(SharedPreferencesUtil.DATA_LOGGING_ENABLED,
+                    SharedPreferencesUtil.DATA_LOGGING_DEFAULT), this));
             main.addView(textView);
         }
         {

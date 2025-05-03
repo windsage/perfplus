@@ -1,5 +1,7 @@
 package xzr.perfmon;
 
+import android.content.Context;
+
 public class RefreshingDateThread extends Thread {
     static int cpunum;
     static int[] cpufreq;
@@ -19,7 +21,16 @@ public class RefreshingDateThread extends Thread {
 
     static int delay;
     static boolean reverseCurrentNow;
+    private DataLogger dataLogger;
+    private boolean isDataLoggingEnabled;
     PlatformUtil platformUtil = PlatformUtil.getInstance();
+
+    public RefreshingDateThread(Context context) {
+        dataLogger = DataLogger.getInstance(context, cpunum);
+        isDataLoggingEnabled = SharedPreferencesUtil.sharedPreferences.getBoolean(
+                SharedPreferencesUtil.DATA_LOGGING_ENABLED, SharedPreferencesUtil.DATA_LOGGING_DEFAULT);
+        dataLogger.setLoggingEnabled(isDataLoggingEnabled);
+    }
 
     public void run() {
         delay = SharedPreferencesUtil.sharedPreferences.getInt(SharedPreferencesUtil.REFRESHING_DELAY, SharedPreferencesUtil.DEFAULT_DELAY);
@@ -68,6 +79,23 @@ public class RefreshingDateThread extends Thread {
             }
             if (reverseCurrentNow)
                 current = -current;
+
+            // 记录数据
+            if (dataLogger.isLoggingEnabled()) {
+                // 解析FPS数据
+                String targetFps = "0";
+                String realFps = "0";
+                if (fps != null && !fps.isEmpty()) {
+                    String[] fpsParts = fps.split("_");
+                    if (fpsParts.length >= 2) {
+                        targetFps = fpsParts[0].trim();
+                        realFps = fpsParts[1].trim();
+                    }
+                }
+
+                dataLogger.logPerformanceData(cpufreq, cpuload, gpufreq, gpuload,
+                        maxtemp, pcbtemp, targetFps, realFps);
+            }
             FloatingWindow.uiRefresher.sendEmptyMessage(0);
             for (int i = 0; i < cpunum; i++) {
                 if (FloatingWindow.showCpuloadNow && Support.support_cpuload) {
@@ -85,5 +113,10 @@ public class RefreshingDateThread extends Thread {
 
             }
         }
+    }
+
+    public void setDataLoggingEnabled(boolean enabled) {
+        isDataLoggingEnabled = enabled;
+        dataLogger.setLoggingEnabled(enabled);
     }
 }

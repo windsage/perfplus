@@ -16,11 +16,17 @@ import android.widget.TextView;
 class Settings {
     private static AlertDialog dialog;
 
-    static void createDialog(Context context) {
+    static void createDialog(final Context context) {
         dialog = new AlertDialog.Builder(context)
                 .setView(settingsView(context))
                 .setTitle(R.string.settings)
                 .create();
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                ((MainActivity)context).onResume();;
+            }
+        });
         dialog.show();
     }
 
@@ -361,9 +367,9 @@ class Settings {
                     @Override
                     public void onClick(View v) {
                         if (sw.isChecked()) {
-                            SharedPreferencesUtil.sharedPreferences.edit().putBoolean(SharedPreferencesUtil.SHOW_CURRENT, true).commit();
+                            SharedPreferencesUtil.sharedPreferences.edit().putBoolean(SharedPreferencesUtil.SHOW_CURRENT, true).apply();
                         } else {
-                            SharedPreferencesUtil.sharedPreferences.edit().putBoolean(SharedPreferencesUtil.SHOW_CURRENT, false).commit();
+                            SharedPreferencesUtil.sharedPreferences.edit().putBoolean(SharedPreferencesUtil.SHOW_CURRENT, false).apply();
                         }
                     }
                 });
@@ -378,9 +384,26 @@ class Settings {
                     @Override
                     public void onClick(View v) {
                         if (sw.isChecked()) {
-                            SharedPreferencesUtil.sharedPreferences.edit().putBoolean(SharedPreferencesUtil.SHOW_FPS, true).commit();
+                            SharedPreferencesUtil.sharedPreferences.edit().putBoolean(SharedPreferencesUtil.SHOW_FPS, true).apply();
                         } else {
-                            SharedPreferencesUtil.sharedPreferences.edit().putBoolean(SharedPreferencesUtil.SHOW_FPS, false).commit();
+                            SharedPreferencesUtil.sharedPreferences.edit().putBoolean(SharedPreferencesUtil.SHOW_FPS, false).apply();
+                        }
+                    }
+                });
+            }
+            {
+                final Switch sw = new Switch(context);
+                linearLayout.addView(sw);
+                sw.setText(R.string.store_data);
+                if (SharedPreferencesUtil.sharedPreferences.getBoolean(SharedPreferencesUtil.DATA_LOGGING_ENABLED, SharedPreferencesUtil.DATA_LOGGING_DEFAULT))
+                    sw.setChecked(true);
+                sw.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (sw.isChecked()) {
+                            SharedPreferencesUtil.sharedPreferences.edit().putBoolean(SharedPreferencesUtil.DATA_LOGGING_ENABLED, true).apply();
+                        } else {
+                            SharedPreferencesUtil.sharedPreferences.edit().putBoolean(SharedPreferencesUtil.DATA_LOGGING_ENABLED, false).apply();
                         }
                     }
                 });

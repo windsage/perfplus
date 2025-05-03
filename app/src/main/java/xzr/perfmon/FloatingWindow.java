@@ -59,9 +59,11 @@ public class FloatingWindow extends Service {
     static boolean showGpubwNow;
     static boolean showLlcbwNow;
     static boolean showFpsNow;
+    private DataLogger dataLogger;
 
     @SuppressLint("ClickableViewAccessibility")
     void init() {
+        dataLogger = DataLogger.getInstance(this, RefreshingDateThread.cpunum);
         sizeMultipleNow = SharedPreferencesUtil.sharedPreferences.getFloat(SharedPreferencesUtil.SIZE_MULTIPLE, SharedPreferencesUtil.SIZE_MULTIPLE_DEFAULT);
         {
             showCpufreqNow = SharedPreferencesUtil.sharedPreferences.getBoolean(SharedPreferencesUtil.SHOW_CPUFREQ, SharedPreferencesUtil.SHOW_CPUFREQ_DEFAULT);
@@ -263,7 +265,7 @@ public class FloatingWindow extends Service {
             main.addView(line[i]);
         }
         windowManager.updateViewLayout(main, params);
-        new RefreshingDateThread().start();
+        new RefreshingDateThread(this).start();
     }
 
     @Override
@@ -289,6 +291,9 @@ public class FloatingWindow extends Service {
     public void onDestroy() {
         Log.d(TAG, "Calling destory service");
         doExit = true;
+        if (dataLogger != null) {
+            dataLogger.onAppStop();
+        }
         try {
             windowManager.removeView(main);
         } catch (Exception e) {
