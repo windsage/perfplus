@@ -10,8 +10,8 @@ android {
         applicationId "com.transsion.perftool"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 17
-        versionName "1.8.0"
+        versionCode 18
+        versionName "1.8.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a'

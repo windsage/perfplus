@@ -60,6 +60,7 @@ public class FloatingWindow extends Service {
     static boolean showLlcbwNow;
     static boolean showFpsNow;
     private DataLogger dataLogger;
+    private Thread.UncaughtExceptionHandler defaultExceptionHandler;
 
     @SuppressLint("ClickableViewAccessibility")
     void init() {
@@ -266,6 +267,23 @@ public class FloatingWindow extends Service {
         }
         windowManager.updateViewLayout(main, params);
         new RefreshingDateThread(this).start();
+        // 添加应用退出监听
+        registerExitHandler();
+    }
+
+    // 注册应用退出处理器
+    private void registerExitHandler() {
+        defaultExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
+        Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
+            // 应用崩溃时保存数据
+            if (dataLogger != null) {
+                dataLogger.onAppStop();
+            }
+            // 调用原始处理器
+            if (defaultExceptionHandler != null) {
+                defaultExceptionHandler.uncaughtException(thread, throwable);
+            }
+        });
     }
 
     @Override
