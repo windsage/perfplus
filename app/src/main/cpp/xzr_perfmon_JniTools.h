@@ -4,9 +4,7 @@
 
 #ifndef _Included_xzr_perfmon_JniTools
 #define _Included_xzr_perfmon_JniTools
-#ifdef __cplusplus
 extern "C" {
-#endif
 /*
  * Class:     xzr_perfmon_JniTools
  * Method:    getcpufreq
@@ -134,7 +132,5 @@ JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getCurrent
 JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getCpuNum
         (JNIEnv *, jclass);
 
-#ifdef __cplusplus
 }
-#endif
 #endif

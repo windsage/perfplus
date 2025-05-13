@@ -2,11 +2,11 @@
 // Created by xzr on 2019/6/28.
 //
 #include "perfmon.h"
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <cstring>
 #include <dirent.h>
-#include <stdlib.h>
-#include <ctype.h>
+#include <cstdlib>
+#include <cctype>
 
 #define SYS_THERMAL_PATH "/sys/class/thermal"
 #define TYPE_FILE "type"

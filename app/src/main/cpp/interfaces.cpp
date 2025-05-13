@@ -4,10 +4,11 @@
 
 #include "xzr_perfmon_JniTools.h"
 #include "perfmon.h"
-#include <stdio.h>
+#include <cstdio>
 #include <unistd.h>
-#include <math.h>
+#include <cmath>
 
+extern "C" {
 JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getCpuFreq
         (JNIEnv *env, jclass jclass1, jint cpu) {
     char path[DEFAULT_PATH_SIZE];
@@ -202,4 +203,5 @@ JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getLlccBw
         return freq;
 
     return UNSUPPORTED;
+}
 }
