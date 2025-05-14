@@ -1,4 +1,4 @@
-package xzr.perfmon;
+package com.transsion.perftool;
 
 import android.view.Choreographer;
 

@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace 'xzr.perfmon'
+    namespace 'com.transsion.perftool'
     compileSdkVersion 33
     defaultConfig {
 //        applicationId "xzr.perfmon"

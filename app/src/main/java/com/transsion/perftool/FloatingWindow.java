@@ -1,19 +1,20 @@
-package xzr.perfmon;
+package com.transsion.perftool;
 
-import static xzr.perfmon.RefreshingDateThread.cpubw;
-import static xzr.perfmon.RefreshingDateThread.cpufreq;
-import static xzr.perfmon.RefreshingDateThread.cpuload;
-import static xzr.perfmon.RefreshingDateThread.current;
-import static xzr.perfmon.RefreshingDateThread.fps;
-import static xzr.perfmon.RefreshingDateThread.gpubw;
-import static xzr.perfmon.RefreshingDateThread.gpufreq;
-import static xzr.perfmon.RefreshingDateThread.gpuload;
-import static xzr.perfmon.RefreshingDateThread.llcbw;
-import static xzr.perfmon.RefreshingDateThread.m4m;
-import static xzr.perfmon.RefreshingDateThread.maxtemp;
-import static xzr.perfmon.RefreshingDateThread.memusage;
-import static xzr.perfmon.RefreshingDateThread.mincpubw;
-import static xzr.perfmon.RefreshingDateThread.pcbtemp;
+
+import static com.transsion.perftool.RefreshingDateThread.cpubw;
+import static com.transsion.perftool.RefreshingDateThread.cpufreq;
+import static com.transsion.perftool.RefreshingDateThread.cpuload;
+import static com.transsion.perftool.RefreshingDateThread.current;
+import static com.transsion.perftool.RefreshingDateThread.fps;
+import static com.transsion.perftool.RefreshingDateThread.gpubw;
+import static com.transsion.perftool.RefreshingDateThread.gpufreq;
+import static com.transsion.perftool.RefreshingDateThread.gpuload;
+import static com.transsion.perftool.RefreshingDateThread.llcbw;
+import static com.transsion.perftool.RefreshingDateThread.m4m;
+import static com.transsion.perftool.RefreshingDateThread.maxtemp;
+import static com.transsion.perftool.RefreshingDateThread.memusage;
+import static com.transsion.perftool.RefreshingDateThread.mincpubw;
+import static com.transsion.perftool.RefreshingDateThread.pcbtemp;
 
 import android.annotation.SuppressLint;
 import android.app.Service;

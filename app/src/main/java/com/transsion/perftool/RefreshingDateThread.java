@@ -1,6 +1,7 @@
-package xzr.perfmon;
+package com.transsion.perftool;
 
 import android.content.Context;
+
 
 public class RefreshingDateThread extends Thread {
     static int cpunum;

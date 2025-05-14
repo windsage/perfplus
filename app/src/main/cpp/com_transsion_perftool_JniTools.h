@@ -2,15 +2,15 @@
 #include <jni.h>
 /* Header for class xzr_perfmon_JniTools */
 
-#ifndef _Included_xzr_perfmon_JniTools
-#define _Included_xzr_perfmon_JniTools
+#ifndef _Included_com_transsion_perftool_JniTools
+#define _Included_com_transsion_perftool_JniTools
 extern "C" {
 /*
  * Class:     xzr_perfmon_JniTools
  * Method:    getcpufreq
  * Signature: (I)I
  */
-JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getCpuFreq
+JNIEXPORT jint JNICALL Java_com_transsion_perftool_JniTools_getCpuFreq
         (JNIEnv *, jclass, jint);
 
 /*
@@ -18,20 +18,20 @@ JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getCpuFreq
  * Method:    getadrenofreq
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getAdrenoFreq
+JNIEXPORT jint JNICALL Java_com_transsion_perftool_JniTools_getAdrenoFreq
         (JNIEnv *, jclass);
 
-JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getMtkMaliFreq
+JNIEXPORT jint JNICALL Java_com_transsion_perftool_JniTools_getMtkMaliFreq
         (JNIEnv * env, jclass clazz);
 
-JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getMtkMaliLoad
+JNIEXPORT jint JNICALL Java_com_transsion_perftool_JniTools_getMtkMaliLoad
         (JNIEnv *env, jclass jclass1);
 /*
  * Class:     xzr_perfmon_JniTools
  * Method:    getadrenoload
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getAdrenoLoad
+JNIEXPORT jint JNICALL Java_com_transsion_perftool_JniTools_getAdrenoLoad
         (JNIEnv *, jclass);
 
 /*
@@ -39,7 +39,7 @@ JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getAdrenoLoad
  * Method:    getmincpubw
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getMinCpuBw
+JNIEXPORT jint JNICALL Java_com_transsion_perftool_JniTools_getMinCpuBw
         (JNIEnv *, jclass);
 
 /*
@@ -47,7 +47,7 @@ JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getMinCpuBw
  * Method:    getcpubw
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getCpuBw
+JNIEXPORT jint JNICALL Java_com_transsion_perftool_JniTools_getCpuBw
         (JNIEnv *, jclass);
 
 /*
@@ -55,7 +55,7 @@ JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getCpuBw
  * Method:    getllcbw
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getLlccBw
+JNIEXPORT jint JNICALL Java_com_transsion_perftool_JniTools_getLlccBw
         (JNIEnv *, jclass);
 
 /*
@@ -63,7 +63,7 @@ JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getLlccBw
  * Method:    getgpubw
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getGpuBw
+JNIEXPORT jint JNICALL Java_com_transsion_perftool_JniTools_getGpuBw
         (JNIEnv *, jclass);
 
 /*
@@ -71,7 +71,7 @@ JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getGpuBw
  * Method:    getm4m
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getM4m
+JNIEXPORT jint JNICALL Java_com_transsion_perftool_JniTools_getM4m
         (JNIEnv *, jclass);
 
 /*
@@ -79,7 +79,7 @@ JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getM4m
  * Method:    getcpuload
  * Signature: (I)I
  */
-JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getCpuLoad
+JNIEXPORT jint JNICALL Java_com_transsion_perftool_JniTools_getCpuLoad
         (JNIEnv *, jclass, jint);
 
 /*
@@ -87,7 +87,7 @@ JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getCpuLoad
  * Method:    checkcpuload
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_xzr_perfmon_JniTools_checkCpuLoad
+JNIEXPORT jboolean JNICALL Java_com_transsion_perftool_JniTools_checkCpuLoad
         (JNIEnv *, jclass);
 
 /*
@@ -95,7 +95,7 @@ JNIEXPORT jboolean JNICALL Java_xzr_perfmon_JniTools_checkCpuLoad
  * Method:    getcpuonlinestatus
  * Signature: (I)I
  */
-JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getCpuOnlineStatus
+JNIEXPORT jint JNICALL Java_com_transsion_perftool_JniTools_getCpuOnlineStatus
         (JNIEnv *, jclass, jint);
 
 /*
@@ -103,17 +103,17 @@ JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getCpuOnlineStatus
  * Method:    get_max_temp
  * Signature: ()F
  */
-JNIEXPORT jfloat JNICALL Java_xzr_perfmon_JniTools_getCpuMaxTemp
+JNIEXPORT jfloat JNICALL Java_com_transsion_perftool_JniTools_getCpuMaxTemp
         (JNIEnv *, jclass);
 
-JNIEXPORT jfloat JNICALL Java_xzr_perfmon_JniTools_getPcbTemp
+JNIEXPORT jfloat JNICALL Java_com_transsion_perftool_JniTools_getPcbTemp
         (JNIEnv *env, jclass jclass1);
 /*
  * Class:     xzr_perfmon_JniTools
  * Method:    getmemusage
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getMemUsage
+JNIEXPORT jint JNICALL Java_com_transsion_perftool_JniTools_getMemUsage
         (JNIEnv *, jclass);
 
 /*
@@ -121,7 +121,7 @@ JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getMemUsage
  * Method:    getcurrent
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getCurrent
+JNIEXPORT jint JNICALL Java_com_transsion_perftool_JniTools_getCurrent
         (JNIEnv *, jclass);
 
 /*
@@ -129,7 +129,7 @@ JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getCurrent
  * Method:    getcpunum
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getCpuNum
+JNIEXPORT jint JNICALL Java_com_transsion_perftool_JniTools_getCpuNum
         (JNIEnv *, jclass);
 
 }

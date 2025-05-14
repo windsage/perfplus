@@ -2,14 +2,14 @@
 // Created by xzr on 2019/6/23.
 //
 
-#include "xzr_perfmon_JniTools.h"
+#include "com_transsion_perftool_JniTools.h"
 #include "perfmon.h"
 #include <cstdio>
 #include <unistd.h>
 #include <cmath>
 
 extern "C" {
-JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getCpuFreq
+JNIEXPORT jint JNICALL Java_com_transsion_perftool_JniTools_getCpuFreq
         (JNIEnv *env, jclass jclass1, jint cpu) {
     char path[DEFAULT_PATH_SIZE];
     int freq;
@@ -20,7 +20,7 @@ JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getCpuFreq
     return freq / 1000;
 }
 
-JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getAdrenoFreq
+JNIEXPORT jint JNICALL Java_com_transsion_perftool_JniTools_getAdrenoFreq
         (JNIEnv *env, jclass jclass1) {
     int freq;
     if (read_file_int("/sys/kernel/gpu/gpu_clock", &freq))
@@ -29,7 +29,7 @@ JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getAdrenoFreq
     return freq;
 }
 
-JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getAdrenoLoad
+JNIEXPORT jint JNICALL Java_com_transsion_perftool_JniTools_getAdrenoLoad
         (JNIEnv *env, jclass jclass1) {
     int freq;
     if (read_file_int("/sys/kernel/gpu/gpu_busy", &freq))
@@ -44,7 +44,7 @@ JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getAdrenoLoad
  * @param clazz
  * @return
  */
-JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getMtkMaliFreq
+JNIEXPORT jint JNICALL Java_com_transsion_perftool_JniTools_getMtkMaliFreq
         (JNIEnv *env, jclass clazz) {
     int freq;
     if (read_gpu_file_int("/proc/gpufreqv2/gpufreq_status", &freq))
@@ -59,7 +59,7 @@ JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getMtkMaliFreq
  * @param jclass1
  * @return
  */
-JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getMtkMaliLoad
+JNIEXPORT jint JNICALL Java_com_transsion_perftool_JniTools_getMtkMaliLoad
         (JNIEnv *env, jclass jclass1) {
     int freq;
     if (read_file_int("/sys/module/ged/parameters/gpu_loading", &freq))
@@ -68,7 +68,7 @@ JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getMtkMaliLoad
     return freq;
 }
 
-JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getMinCpuBw
+JNIEXPORT jint JNICALL Java_com_transsion_perftool_JniTools_getMinCpuBw
         (JNIEnv *env, jclass jclass1) {
     int freq;
 
@@ -78,7 +78,7 @@ JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getMinCpuBw
     return freq;
 }
 
-JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getCpuBw
+JNIEXPORT jint JNICALL Java_com_transsion_perftool_JniTools_getCpuBw
         (JNIEnv *env, jclass jclass1) {
     int freq;
 
@@ -91,7 +91,7 @@ JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getCpuBw
     return UNSUPPORTED;
 }
 
-JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getM4m
+JNIEXPORT jint JNICALL Java_com_transsion_perftool_JniTools_getM4m
         (JNIEnv *env, jclass jclass1) {
     int freq;
 
@@ -101,7 +101,7 @@ JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getM4m
     return freq / 1000;
 }
 
-JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getCpuLoad
+JNIEXPORT jint JNICALL Java_com_transsion_perftool_JniTools_getCpuLoad
         (JNIEnv *env, jclass jclass1, jint cpu) {
     int time1 = 0, time2 = 0, idle1 = 0, idle2 = 0;
     if (get_cpu_time(cpu, &time1, &idle1))
@@ -112,7 +112,7 @@ JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getCpuLoad
     return (int) ((1 - (((float) idle2 - idle1) / (time2 - time1))) * 100);
 }
 
-JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getCpuOnlineStatus
+JNIEXPORT jint JNICALL Java_com_transsion_perftool_JniTools_getCpuOnlineStatus
         (JNIEnv *env, jclass jclass1, jint cpu) {
     int status;
     char path[DEFAULT_PATH_SIZE];
@@ -124,7 +124,7 @@ JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getCpuOnlineStatus
     return status;
 }
 
-JNIEXPORT jfloat JNICALL Java_xzr_perfmon_JniTools_getCpuMaxTemp
+JNIEXPORT jfloat JNICALL Java_com_transsion_perftool_JniTools_getCpuMaxTemp
         (JNIEnv *env, jclass jclass1) {
     int temp;
     if (get_sensor_max_temp(&temp, "cpu") || temp == NULLTEMP)
@@ -133,7 +133,7 @@ JNIEXPORT jfloat JNICALL Java_xzr_perfmon_JniTools_getCpuMaxTemp
     return temp / 1000.0;
 }
 
-JNIEXPORT jfloat JNICALL Java_xzr_perfmon_JniTools_getPcbTemp
+JNIEXPORT jfloat JNICALL Java_com_transsion_perftool_JniTools_getPcbTemp
         (JNIEnv *env, jclass jclass1) {
     int temp;
     if (get_sensor_temp(&temp, "ap_ntc") || temp == NULLTEMP)
@@ -142,7 +142,7 @@ JNIEXPORT jfloat JNICALL Java_xzr_perfmon_JniTools_getPcbTemp
     return temp / 1000.0;
 }
 
-JNIEXPORT jboolean JNICALL Java_xzr_perfmon_JniTools_checkCpuLoad
+JNIEXPORT jboolean JNICALL Java_com_transsion_perftool_JniTools_checkCpuLoad
         (JNIEnv *env, jclass jclass1) {
     FILE *file = fopen("/proc/stat", "r");
     if (file == NULL)
@@ -150,7 +150,7 @@ JNIEXPORT jboolean JNICALL Java_xzr_perfmon_JniTools_checkCpuLoad
     return 1;
 }
 
-JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getMemUsage
+JNIEXPORT jint JNICALL Java_com_transsion_perftool_JniTools_getMemUsage
         (JNIEnv *env, jclass jclass1) {
     int total = -1;
     int available = -1;
@@ -164,7 +164,7 @@ JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getMemUsage
     return (int) ((1 - (float) available / total) * 100);
 }
 
-JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getCurrent
+JNIEXPORT jint JNICALL Java_com_transsion_perftool_JniTools_getCurrent
         (JNIEnv *env, jclass jclass1) {
     int current;
 
@@ -174,7 +174,7 @@ JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getCurrent
     return -current / 1000;
 }
 
-JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getCpuNum
+JNIEXPORT jint JNICALL Java_com_transsion_perftool_JniTools_getCpuNum
         (JNIEnv *env, jclass jclass1) {
     int cpunum;
     if (read_process_int("ls /sys/devices/system/cpu | grep -o \"cpu[0-9]*$\" | wc -l", &cpunum))
@@ -182,7 +182,7 @@ JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getCpuNum
     return cpunum;
 }
 
-JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getGpuBw
+JNIEXPORT jint JNICALL Java_com_transsion_perftool_JniTools_getGpuBw
         (JNIEnv *env, jclass jclass1) {
     int freq;
 
@@ -192,7 +192,7 @@ JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getGpuBw
     return freq;
 }
 
-JNIEXPORT jint JNICALL Java_xzr_perfmon_JniTools_getLlccBw
+JNIEXPORT jint JNICALL Java_com_transsion_perftool_JniTools_getLlccBw
         (JNIEnv *env, jclass jclass1) {
     int freq;
 

@@ -1,4 +1,4 @@
-package xzr.perfmon;
+package com.transsion.perftool;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
+
 
 class Settings {
     private static AlertDialog dialog;

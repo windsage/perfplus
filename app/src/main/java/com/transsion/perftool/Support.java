@@ -1,4 +1,4 @@
-package xzr.perfmon;
+package com.transsion.perftool;
 
 class Support {
     static boolean support_cpufreq;

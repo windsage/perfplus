@@ -1,4 +1,4 @@
-package xzr.perfmon;
+package com.transsion.perftool;
 
 public class JniTools {
     static {
