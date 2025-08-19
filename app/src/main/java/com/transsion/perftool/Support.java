@@ -46,7 +46,8 @@ class Support {
             support_m4m = true;
         } else support_m4m = false;
 
-        if (JniTools.getCpuMaxTemp() != UNSUPPORTED || JniTools.getPcbTemp() != UNSUPPORTED) {
+        if (JniTools.getCpuMaxTemp() != UNSUPPORTED || JniTools.getPcbTemp() != UNSUPPORTED
+                || JniTools.getQcomPcbTemp() != UNSUPPORTED) {
             linen++;
             linen++;
             support_temp = true;

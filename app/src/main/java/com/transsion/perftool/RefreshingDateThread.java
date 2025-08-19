@@ -65,7 +65,11 @@ public class RefreshingDateThread extends Thread {
                 m4m = JniTools.getM4m();
             if (FloatingWindow.showThermalNow && Support.support_temp) {
                 maxtemp = JniTools.getCpuMaxTemp();
-                pcbtemp = JniTools.getPcbTemp();
+                if (platformUtil.isQualcomm()) {
+                    pcbtemp = JniTools.getQcomPcbTemp();
+                } else {
+                    pcbtemp = JniTools.getPcbTemp();
+                }
             }
             if (FloatingWindow.showMemNow && Support.support_mem)
                 memusage = JniTools.getMemUsage();

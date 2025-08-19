@@ -10,8 +10,8 @@ android {
         applicationId "com.transsion.perftool"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 18
-        versionName "1.8.2"
+        versionCode 19
+        versionName "1.8.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         ndk {
             ndkVersion = "29.0.13113456"

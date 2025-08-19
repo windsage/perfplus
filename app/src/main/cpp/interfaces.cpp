@@ -23,19 +23,51 @@ JNIEXPORT jint JNICALL Java_com_transsion_perftool_JniTools_getCpuFreq
 JNIEXPORT jint JNICALL Java_com_transsion_perftool_JniTools_getAdrenoFreq
         (JNIEnv *env, jclass jclass1) {
     int freq;
-    if (read_file_int("/sys/kernel/gpu/gpu_clock", &freq))
+    if (read_file_int("/sys/class/kgsl/kgsl-3d0/gpuclk", &freq))
         return UNSUPPORTED;
 
-    return freq;
+    return freq / 1000000;
 }
 
 JNIEXPORT jint JNICALL Java_com_transsion_perftool_JniTools_getAdrenoLoad
         (JNIEnv *env, jclass jclass1) {
-    int freq;
-    if (read_file_int("/sys/kernel/gpu/gpu_busy", &freq))
-        return UNSUPPORTED;
 
-    return freq;
+    FILE *fp = fopen("/sys/class/kgsl/kgsl-3d0/gpubusy", "r");
+    if (fp == NULL) {
+        return UNSUPPORTED;
+    }
+
+    char buffer[128];
+    if (fgets(buffer, sizeof(buffer), fp) == NULL) {
+        fclose(fp);
+        return UNSUPPORTED;
+    }
+    fclose(fp);
+
+    // Parse two numbers from the buffer
+    long long busy_time = 0;
+    long long total_time = 0;
+
+    if (sscanf(buffer, "%lld %lld", &busy_time, &total_time) != 2) {
+        return UNSUPPORTED;
+    }
+
+    // Check for division by zero
+    if (total_time == 0) {
+        return 0;
+    }
+
+    // Calculate GPU load percentage
+    int gpu_load = (int)((busy_time * 100) / total_time);
+
+    // Ensure the result is within valid range
+    if (gpu_load < 0) {
+        gpu_load = 0;
+    } else if (gpu_load > 100) {
+        gpu_load = 100;
+    }
+
+    return gpu_load;
 }
 
 /**
@@ -141,6 +173,24 @@ JNIEXPORT jfloat JNICALL Java_com_transsion_perftool_JniTools_getPcbTemp
 
     return temp / 1000.0;
 }
+
+JNIEXPORT jfloat JNICALL Java_com_transsion_perftool_JniTools_getQcomPcbTemp
+        (JNIEnv *env, jclass jclass1) {
+    int temp_raw;
+    int result;
+    result = get_sensor_temp(&temp_raw, "sys-therm-3");
+    switch (result) {
+        case 0:
+            return (jfloat)temp_raw / 1000.0f;
+        case -1:
+            return -1.0f;
+        case -2:
+            return -2.0f;
+        default:
+            return -3.0f;
+    }
+}
+
 
 JNIEXPORT jboolean JNICALL Java_com_transsion_perftool_JniTools_checkCpuLoad
         (JNIEnv *env, jclass jclass1) {

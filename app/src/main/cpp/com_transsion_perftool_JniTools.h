@@ -108,6 +108,9 @@ JNIEXPORT jfloat JNICALL Java_com_transsion_perftool_JniTools_getCpuMaxTemp
 
 JNIEXPORT jfloat JNICALL Java_com_transsion_perftool_JniTools_getPcbTemp
         (JNIEnv *env, jclass jclass1);
+
+JNIEXPORT jfloat JNICALL Java_com_transsion_perftool_JniTools_getQcomPcbTemp
+        (JNIEnv *env, jclass jclass1);
 /*
  * Class:     xzr_perfmon_JniTools
  * Method:    getmemusage
