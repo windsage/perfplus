@@ -2,4 +2,5 @@
 plugins {
     id 'com.android.application' version '8.0.2' apply false
     id 'com.android.library' version '8.0.2' apply false
+    id 'com.transsion.plugin.ApkAutoSignature' version '1.003.003' apply false
 }

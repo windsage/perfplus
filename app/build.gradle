@@ -1,10 +1,12 @@
 plugins {
     id 'com.android.application'
+    id 'com.transsion.plugin.ApkAutoSignature'
 }
 
 android {
     namespace 'com.transsion.perftool'
     compileSdkVersion 33
+    flavorDimensions "brand"
     defaultConfig {
 //        applicationId "xzr.perfmon"
         applicationId "com.transsion.perftool"
@@ -13,6 +15,8 @@ android {
         versionCode 19
         versionName "1.8.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders["apkAutoSignatureKeyType"] = "a16-release"
+        manifestPlaceholders["apkAutoSignatureKeyName"] = "platform"
         ndk {
             ndkVersion = "29.0.13113456"
             abiFilters "armeabi-v7a", "arm64-v8a"
@@ -37,6 +41,13 @@ android {
     }
 
 
+    productFlavors {
+        infinix {
+            dimension "brand"
+            manifestPlaceholders["apkAutoSignatureKeyType"] = "a16-release"
+            manifestPlaceholders["apkAutoSignatureKeyName"] = "platform"
+        }
+    }
     externalNativeBuild {
         cmake {
             path file('src/main/cpp/CMakeLists.txt')

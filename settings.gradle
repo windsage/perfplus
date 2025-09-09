@@ -3,6 +3,8 @@ pluginManagement {
         gradlePluginPortal()
         google()
         mavenCentral()
+        maven { url "https://artifact.transsion.com/artifactory/adm-release-maven-prod-local/" }
+        maven { url "https://artifact.transsion.com/artifactory/maven-public/" }
     }
 }
 dependencyResolutionManagement {
