@@ -135,5 +135,20 @@ JNIEXPORT jint JNICALL Java_com_transsion_perftool_JniTools_getCurrent
 JNIEXPORT jint JNICALL Java_com_transsion_perftool_JniTools_getCpuNum
         (JNIEnv *, jclass);
 
+/*
+ * Class:     com_transsion_perftool_JniTools
+ * Method:    getQcomDisplayFps
+ * Signature: ()F
+ */
+JNIEXPORT jfloat JNICALL Java_com_transsion_perftool_JniTools_getQcomDisplayFps
+        (JNIEnv *, jclass);
+
+/*
+ * Class:     com_transsion_perftool_JniTools
+ * Method:    getMtkDisplayFps
+ * Signature: ()F
+ */
+JNIEXPORT jfloat JNICALL Java_com_transsion_perftool_JniTools_getMtkDisplayFps
+        (JNIEnv *, jclass);
 }
 #endif

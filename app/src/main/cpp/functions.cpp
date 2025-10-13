@@ -274,3 +274,119 @@ int get_mem_info(char name[], int *data) {
 
     return 0;
 }
+
+/**
+ * Read display FPS from Qualcomm DRM node
+ * Path: /sys/class/drm/sde-crtc-0/measured_fps
+ * Format: "fps: 80.8 duration:500000 frame_count:41"
+ */
+int get_qcom_display_fps(float *fps) {
+    if (!fps) return UNSUPPORTED;
+
+    *fps = 0.0f;
+
+    const char *qcom_path = "/sys/class/drm/sde-crtc-0/measured_fps";
+
+    FILE *fp = fopen(qcom_path, "r");
+    if (!fp) {
+        return UNSUPPORTED;
+    }
+
+    char line[128];
+    char last_line[128] = {0};
+
+    // Read all lines and keep the last one (most recent measurement)
+    while (fgets(line, sizeof(line), fp)) {
+        strncpy(last_line, line, sizeof(last_line) - 1);
+    }
+    fclose(fp);
+
+    // Parse format: "fps: 80.8 duration:500000 frame_count:41"
+    if (strlen(last_line) > 0) {
+        float parsed_fps = 0.0f;
+        if (sscanf(last_line, "fps: %f", &parsed_fps) == 1) {
+            // Sanity check: FPS should be between 1 and 240
+            if (parsed_fps >= 1.0f && parsed_fps <= 240.0f) {
+                *fps = parsed_fps;
+                return 0;
+            }
+        }
+    }
+
+    return UNSUPPORTED;
+}
+
+/**
+ * Read display FPS from MediaTek fpsgo node
+ * Path: /sys/kernel/fpsgo/fstb/fpsgo_status
+ * Format: tid bufID name currentFPS targetFPS ...
+ */
+int get_mtk_display_fps(float *fps) {
+    if (!fps) return UNSUPPORTED;
+
+    *fps = 0.0f;
+
+    const char *mtk_path = "/sys/kernel/fpsgo/fstb/fpsgo_status";
+
+    FILE *fp = fopen(mtk_path, "r");
+    if (!fp) {
+        return UNSUPPORTED;
+    }
+
+    char line[256];
+    float max_current_fps = 0.0f;
+    float dfps_ceiling = 0.0f;
+
+    // Skip header line (tid bufID name currentFPS targetFPS ...)
+    if (!fgets(line, sizeof(line), fp)) {
+        fclose(fp);
+        return UNSUPPORTED;
+    }
+
+    while (fgets(line, sizeof(line), fp)) {
+        // Parse dfps_ceiling line
+        if (strncmp(line, "dfps_ceiling:", 13) == 0) {
+            sscanf(line, "dfps_ceiling:%f", &dfps_ceiling);
+            break;
+        }
+
+        // Parse data line: tid bufID name currentFPS targetFPS ...
+        int tid;
+        char bufID[32], name[32];
+        float current_fps, target_fps;
+
+        int parsed = sscanf(line, "%d %s %s %f %f",
+                            &tid, bufID, name, &current_fps, &target_fps);
+
+        if (parsed >= 5) {
+            // Filter conditions:
+            // 1. Exclude ADPF
+            // 2. Exclude currentFPS > targetFPS (abnormal data)
+            // 3. Exclude currentFPS <= 0 (no rendering)
+            if (strstr(name, "ADPF") != NULL) {
+                continue;
+            }
+
+            if (current_fps <= 0 || current_fps > target_fps) {
+                continue;
+            }
+
+            // Find maximum currentFPS
+            if (current_fps > max_current_fps) {
+                max_current_fps = current_fps;
+            }
+        }
+    }
+    fclose(fp);
+
+    // Return max currentFPS if available, otherwise dfps_ceiling
+    if (max_current_fps > 0.0f) {
+        *fps = max_current_fps;
+    } else if (dfps_ceiling > 0.0f) {
+        *fps = dfps_ceiling;
+    } else {
+        return UNSUPPORTED;
+    }
+
+    return 0;
+}

@@ -42,4 +42,8 @@ public class JniTools {
     public static native int getCurrent();
 
     public static native int getCpuNum();
+
+    public static native float getQcomDisplayFps();
+
+    public static native float getMtkDisplayFps();
 }

@@ -58,7 +58,7 @@ JNIEXPORT jint JNICALL Java_com_transsion_perftool_JniTools_getAdrenoLoad
     }
 
     // Calculate GPU load percentage
-    int gpu_load = (int)((busy_time * 100) / total_time);
+    int gpu_load = (int) ((busy_time * 100) / total_time);
 
     // Ensure the result is within valid range
     if (gpu_load < 0) {
@@ -181,7 +181,7 @@ JNIEXPORT jfloat JNICALL Java_com_transsion_perftool_JniTools_getQcomPcbTemp
     result = get_sensor_temp(&temp_raw, "sys-therm-3");
     switch (result) {
         case 0:
-            return (jfloat)temp_raw / 1000.0f;
+            return (jfloat) temp_raw / 1000.0f;
         case -1:
             return -1.0f;
         case -2:
@@ -253,5 +253,27 @@ JNIEXPORT jint JNICALL Java_com_transsion_perftool_JniTools_getLlccBw
         return freq;
 
     return UNSUPPORTED;
+}
+
+JNIEXPORT jfloat JNICALL Java_com_transsion_perftool_JniTools_getQcomDisplayFps
+        (JNIEnv *env, jclass jclass1) {
+    float fps = 0.0f;
+
+    if (get_qcom_display_fps(&fps) != 0) {
+        return (jfloat)UNSUPPORTED;
+    }
+
+    return (jfloat)fps;
+}
+
+JNIEXPORT jfloat JNICALL Java_com_transsion_perftool_JniTools_getMtkDisplayFps
+        (JNIEnv *env, jclass jclass1) {
+    float fps = 0.0f;
+
+    if (get_mtk_display_fps(&fps) != 0) {
+        return (jfloat)UNSUPPORTED;
+    }
+
+    return (jfloat)fps;
 }
 }

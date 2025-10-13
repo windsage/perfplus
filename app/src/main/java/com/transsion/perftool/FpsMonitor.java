@@ -9,9 +9,11 @@ import java.util.Locale;
 public class FpsMonitor {
     private static FpsMonitor instance;
     private final FpsCalculator fpsCalculator;
+    private final PlatformUtil platformUtil;
 
     private FpsMonitor() {
         fpsCalculator = new FpsCalculator();
+        platformUtil = PlatformUtil.getInstance();
     }
 
     public static synchronized FpsMonitor getInstance() {
@@ -22,28 +24,54 @@ public class FpsMonitor {
     }
 
     public void start() {
-        fpsCalculator.startTracking();
+        if (!platformUtil.isQualcomm() && !platformUtil.isMediaTek()) {
+            fpsCalculator.startTracking();
+        }
     }
 
     public void stop() {
-        fpsCalculator.stopTracking();
-    }
-
-    public float getFps() {
-        return fpsCalculator.getFps();
+        if (!platformUtil.isQualcomm() && !platformUtil.isMediaTek()) {
+            fpsCalculator.stopTracking();
+        }
     }
 
     /**
-     * 创建与原JNI函数兼容的返回格式
+     * Get current FPS value
+     * For Qualcomm: read from DRM node
+     * For MediaTek: read from fpsgo node
+     * For others: use Choreographer calculation
      */
-    public String getFpsgoInfo() {
+    public float getFps() {
+        if (platformUtil.isQualcomm()) {
+            float fps = JniTools.getQcomDisplayFps();
+            return (fps > 0) ? fps : 0.0f;
+        } else if (platformUtil.isMediaTek()) {
+            float fps = JniTools.getMtkDisplayFps();
+            return (fps > 0) ? fps : 0.0f;
+        } else {
+            return fpsCalculator.getFps();
+        }
+    }
+
+    /**
+     * Get target refresh rate from display
+     */
+    private int getTargetRefreshRate() {
         Context context = App.getContext();
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
-        int targetFps = Math.round(display.getRefreshRate());
+        return Math.round(display.getRefreshRate());
+    }
 
-        float currentFps = fpsCalculator.getFps();
-        String formattedFps = String.format(Locale.US,"%.2f", currentFps);
+    /**
+     * Create FPS info string compatible with original format
+     * Format: "targetFps_realFps"
+     * Example: "120_80.5"
+     */
+    public String getFpsgoInfo() {
+        int targetFps = getTargetRefreshRate();
+        float currentFps = getFps();
+        String formattedFps = String.format(Locale.US, "%.1f", currentFps);
 
         return targetFps + "_" + formattedFps;
     }

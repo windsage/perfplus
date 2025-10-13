@@ -29,4 +29,17 @@ int read_process_int(const char *cmd, int *result);
 
 int read_process_str(const char *cmd, char *result);
 
+/**
+ * Get real FPS from Qualcomm DRM node
+ * @param fps Output parameter for FPS value
+ * @return 0 on success, UNSUPPORTED on failure
+ */
+int get_qcom_display_fps(float *fps);
+
+/**
+ * Get real FPS from MediaTek fpsgo node
+ * @param fps Output parameter for FPS value
+ * @return 0 on success, UNSUPPORTED on failure
+ */
+int get_mtk_display_fps(float *fps);
 #endif //PERFMON_PERFMON_H
