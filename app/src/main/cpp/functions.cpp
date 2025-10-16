@@ -126,8 +126,6 @@ int get_cpu_time(int cpu, int *full_time, int *idle_time) {
 
 }
 
-
-
 void to_lowercase(const char *src, char *dst, size_t size) {
     size_t i = 0;
     for (; i < size - 1 && src[i]; i++) {
@@ -256,7 +254,7 @@ int get_mem_info(char name[], int *data) {
     FILE *mem_info;
     char cache[20] = "";
 
-    mem_info = fopen("/proc/mem_info", "r");
+    mem_info = fopen("/proc/meminfo", "r");
     if (mem_info == NULL)
         return UNSUPPORTED;
 
